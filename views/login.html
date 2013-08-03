@@ -1,1 +1,31 @@
-<form action="POST"></form>
+{% extends 'layout.html' %}
+
+{% block content%}
+<div class="login-form">
+<form action="POST">
+  <fieldset>
+    <legend>Login</legend>
+
+    <div class="row">
+      <div class="large-12 columns">
+        <!-- <label>Username</label> -->
+        <input type="text" placeholder="Username">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="large-12 columns">
+        <!-- <label>Password</label> -->
+        <input type="text" placeholder="Password">
+      </div>
+    </div>
+    <div class="row">
+      <div class="large-3 small-centered columns">
+        <!-- <label>Password</label> -->
+        <input type="submit">
+      </div>
+    </div>
+  </fieldset>
+</form>
+</div>
+{% endblock %}
