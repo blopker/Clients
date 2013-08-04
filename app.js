@@ -4,14 +4,15 @@
  */
 
 var express = require('express'),
-    routes = require('./routes'),
+    routes = require('./routes/routes'),
     user = require('./routes/user'),
     http = require('http'),
     path = require('path'),
     config = require('./config'),
     cons = require('consolidate'),
     swig = require('swig'),
-    sass = require('node-sass');
+    sass = require('node-sass'),
+    auth = require('./routes/auth');
 
 var app = express();
 
@@ -34,25 +35,35 @@ if (!app.get('dev')) {
 app.use(sass.middleware({
  src:   __dirname + '/public/',
  dest:  __dirname + '/public/',
- debug: true
+ debug: config.dev || true
 }));
 
 app.use(express.favicon());
 app.use(express.logger('dev'));
+app.use(express.cookieParser());
 app.use(express.bodyParser());
+app.use(express.session({ secret: config.secret || 'keyboard cat',
+                          cookie: {httpOnly: true}
+                        }));
+auth.init(app);
 app.use(express.methodOverride());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
 // development only
-if ('development' == app.get('env')) {
+if (app.get('dev')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', routes.index);
-app.get('/login', routes.login);
-app.get('/users', user.list);
+routes.init(app);
 
-http.createServer(app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
-});
+if (module.parent === null) {
+    // Srart the server if not testing.
+    http.createServer(app).listen(app.get('port'), function(){
+      console.log('Express server listening on port ' + app.get('port'));
+    });
+} else {
+    // Export app for testing.
+    module.exports = app;
+}
+

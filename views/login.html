@@ -2,27 +2,24 @@
 
 {% block content%}
 <div class="login-form">
-<form action="POST">
+<form action="/login" method="POST">
   <fieldset>
     <legend>Login</legend>
 
     <div class="row">
       <div class="large-12 columns">
-        <!-- <label>Username</label> -->
-        <input type="text" placeholder="Username">
+        <input type="text" name="username" placeholder="Username">
       </div>
     </div>
 
     <div class="row">
       <div class="large-12 columns">
-        <!-- <label>Password</label> -->
-        <input type="text" placeholder="Password">
+        <input type="password" name="password" placeholder="Password">
       </div>
     </div>
     <div class="row">
       <div class="large-3 small-centered columns">
-        <!-- <label>Password</label> -->
-        <input type="submit">
+        <input class="small secondary button" type="submit">
       </div>
     </div>
   </fieldset>
