@@ -11,7 +11,7 @@ User.prototype.isAdmin = function() {
 };
 
 var db = [
-    new User('bo', 'pass', '/', true),
+    new User('bo', 'pass', '/home/ninj0x/Downloads', true),
     new User('tommy', 'pass', '/tmp')
 ];
 

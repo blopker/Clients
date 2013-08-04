@@ -1,6 +1,5 @@
 var app = require('../app'),
-    request = require('supertest'),
-    assert = require('assert');
+    request = require('supertest');
 
 describe('Index', function() {
     it('should return HTML', function(done) {
@@ -32,7 +31,7 @@ describe('Auth', function() {
     describe('Restricted page', function() {
         it('should redirect to login when not logged in', function(done) {
             request(app)
-                .get('/files')
+                .get('/files/')
                 .expect(302)
                 .expect('Location', '/login')
                 .end(function(err, res) {
@@ -56,7 +55,7 @@ describe('Auth', function() {
         });
 
         it('should allow access to files after logging in', function(done) {
-            tommy.get('/files')
+            tommy.get('/files/')
                 .expect(200)
                 .end(function(err, res) {
                      if (err) throw err;
@@ -64,7 +63,7 @@ describe('Auth', function() {
                 });
         });
 
-        it('should not allow access to admin after logging in', function(done) {
+        it('should not allow access to admin for users', function(done) {
             tommy.get('/admin')
                 .expect(302)
                 .end(function(err, res) {

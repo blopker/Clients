@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-mocha -R spec
+mocha -R spec -w

@@ -2,6 +2,8 @@ var passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
     User = require('../models/User');
 
+var log_in_as = false;
+
 passport.serializeUser(function(user, done) {
     done(null, user.id);
 });
@@ -34,6 +36,13 @@ function login_get(req, res) {
 
 // Middleware to restrict page access.
 function restricted(req, res, next) {
+    if (log_in_as !== false) {
+        User.find(log_in_as, function(err, user) {
+            if (err) {return;}
+            req.logIn(user, function(err) {});
+        });
+    }
+
     if (req.isAuthenticated()) { return next(); }
     // Save this page for later.
     req.session.lastURL = req.url;
@@ -49,6 +58,8 @@ function restrictedAdmin (req, res, next) {
 }
 
 exports.init = function(app) {
+    log_in_as = app.get('log_in_as');
+
     app.use(passport.initialize());
     app.use(passport.session());
 

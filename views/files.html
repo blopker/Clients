@@ -1,0 +1,7 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    {% for file in folder.files %}
+        <div>{{ file.name }}</div>
+    {%- endfor %}
+{% endblock %}

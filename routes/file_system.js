@@ -1,11 +1,13 @@
-var fs = require('fs');
+var local_fs = require('../models/LocalFileSystem');
 
 function browse (req, res) {
     var path = req.user.root + req.params[0];
-    fs.readdir(path, function(err, files) {
-        if (err) {return res.end(err);}
-        res.json(files);
+
+    local_fs.get_folder(path, function(err, folder) {
+        if(err){return res.send(404);}
+        res.render('files', {folder: folder});
     });
 }
 
 exports.browse = browse;
+

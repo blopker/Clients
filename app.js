@@ -16,8 +16,13 @@ var express = require('express'),
 
 var app = express();
 
-// all environments
+var testing = (module.parent === null)?false:true;
+
+// Set env
 app.set('dev', config.dev || true);
+// Disable log_in_as while running tests.
+var log_in_as = (testing)?false:config.log_in_as || false;
+app.set('log_in_as', log_in_as);
 app.set('port', config.port || 3000);
 
 // Set up templates.
@@ -39,7 +44,10 @@ app.use(sass.middleware({
 }));
 
 app.use(express.favicon());
-app.use(express.logger('dev'));
+// Keep logger quite for tests.
+if (!testing) {
+    app.use(express.logger('dev'));
+}
 app.use(express.cookieParser());
 app.use(express.bodyParser());
 app.use(express.session({ secret: config.secret || 'keyboard cat',
@@ -50,14 +58,14 @@ app.use(express.methodOverride());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
-// development only
+// Development only
 if (app.get('dev')) {
   app.use(express.errorHandler());
 }
 
 routes.init(app);
 
-if (module.parent === null) {
+if (!testing) {
     // Srart the server if not testing.
     http.createServer(app).listen(app.get('port'), function(){
       console.log('Express server listening on port ' + app.get('port'));
