@@ -30,7 +30,8 @@ app.engine('html', cons.swig);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'html');
 swig.init({
-    'root': app.get('views')
+    root: app.get('views'),
+    filters: require('./filters/filters')
 });
 if (!app.get('dev')) {
     app.locals.cache = true;

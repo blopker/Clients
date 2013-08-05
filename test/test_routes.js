@@ -1,5 +1,7 @@
 var app = require('../app'),
-    request = require('supertest');
+    request = require('supertest'),
+    sanitize = require('../routes/file_system').sanitize_path,
+    assert = require('assert');
 
 describe('Index', function() {
     it('should return HTML', function(done) {
@@ -93,6 +95,25 @@ describe('Auth', function() {
                      if (err) throw err;
                      done();
                 });
+        });
+    });
+});
+
+describe('Files', function() {
+    describe('Browse', function() {
+        it('should return false if ../ in path', function() {
+            var san_path = sanitize('/bin/../');
+            assert.equal(san_path, false);
+        });
+
+        it('should return path if ../ not in path', function() {
+            var san_path = sanitize('/bin/');
+            assert.equal(san_path, '/bin/');
+        });
+
+        it('should return path if ../ not in path', function() {
+            var san_path = sanitize('/bi..n/');
+            assert.equal(san_path, '/bi..n/');
         });
     });
 });

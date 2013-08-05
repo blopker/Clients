@@ -1,4 +1,5 @@
 function Folder (path) {
+    // console.log('folder!' + path)
     this.path = path;
     var pathArray = path.split('/');
     this.name = pathArray[pathArray.length - 2];

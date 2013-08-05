@@ -3,39 +3,58 @@ var fs = require('fs'),
     File = require('../models/File'),
     async = require('async');
 
-function files_to_path (root, files) {
+function files_to_paths(root, files) {
     return files.map(function(file) {return root + file;});
 }
 
-function populate_folder (folder, paths, cb) {
+function endsWith(str, suffix) {
+    return str.indexOf(suffix, str.length - suffix.length) !== -1;
+}
+
+function populate_folder(folder, paths, cb) {
     async.map(paths, fs.stat, function(err, results) {
-        if (err) {return cb(err, []);}
+        if (err) {
+            return cb(err, null);}
         for (var i = 0; i < paths.length; i++) {
-            folder.add_file(new File(paths[i], 'dunno', results[i]));
+            folder.add_file(new File(paths[i], results[i]));
         }
         return cb(null, folder);
     });
 }
 
-function sanitize_path (path) {
-    // Make sure folders end with /
-    if (path.lastIndexOf('/') !== path.length -1) {path += '/';}
-    path = path.replace('../', '');
-    return path;
-}
-
 function get_folder(path, cb){
-    path = sanitize_path(path);
-
+    try{
+        path = fs.realpathSync(path) + '/';
+    } catch(err) {
+        return cb(err, null);
+    }
     var folder = new Folder(path);
+
     fs.readdir(path, function(err, files) {
         if (err) {return cb(err, []);}
-        var paths = files_to_path(path, files);
+        var paths = files_to_paths(path, files);
+
         populate_folder(folder, paths, function(err, folder) {
-            if (err) {return cb(err, []);}
+            if (err) {return cb(err, null);}
             return cb(null, folder);
         });
     });
 }
 
+function get_path (res, path, cb) {
+    fs.stat(path, function(err, stat) {
+        if(err){return res.send(404);}
+
+        if (stat.isFile()) {
+            return res.download(path);
+        }
+
+        get_folder(path, function(err, folder) {
+            if(err){return res.send(404);}
+            return res.render('files', {folder: folder});
+        });
+    });
+}
+
 exports.get_folder = get_folder;
+exports.get_path = get_path;

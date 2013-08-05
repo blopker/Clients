@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "nodemon -e js,html app.js"
+    "start": "nodemon -e js,html --debug app.js"
   },
   "dependencies": {
     "express": "3.3.4",

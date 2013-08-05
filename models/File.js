@@ -1,7 +1,10 @@
-function File(path, type, stats) {
+function File(path, stats) {
     this.path = path;
     var pathArray = path.split('/');
     this.name = pathArray[pathArray.length - 1];
+    if (stats.isDirectory()) {
+        this.name += '/';
+    }
     this.stats = stats;
     this.type = this.get_type(this.name, stats);
     return this;

@@ -1,7 +1,36 @@
 {% extends 'layout.html' %}
 
 {% block content %}
+<a href="/files/">Home</a>
+{% for c in crumb %}
+    / <a href="{{c.link}}">{{c.name}}</a>
+{% endfor %}
+<ul class="row">
     {% for file in folder.files %}
-        <div>{{ file.name }}</div>
-    {%- endfor %}
+        {% if file.stats.isDirectory() %}
+            <li class="row file">
+                <div class="large-1 columns">
+                    {{ file.type }}
+                </div>
+                <div class="large-11 columns">
+                    <a href="{{file.name}}">{{file.name}}</a>
+                </div>
+            </li>
+        {% endif %}
+    {% endfor %}
+    {% for file in folder.files %}
+        {% if file.stats.isFile() %}
+            <li class="row file">
+                <div class="large-1 columns">
+                    {{ file.type }}
+                </div>
+                <div class="large-11 columns">
+                    <a href="{{file.name}}">{{file.name}}</a>
+                    {{file.stats.size | toMB}} MB
+                </div>
+            </li>
+        {% endif %}
+    {% endfor %}
+</ul>
+Total Size: {{ folder.size | toMB }} MB
 {% endblock %}
