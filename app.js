@@ -4,15 +4,16 @@
  */
 
 var express = require('express'),
-    routes = require('./routes/routes'),
-    user = require('./routes/user'),
     http = require('http'),
     path = require('path'),
-    config = require('./config'),
     cons = require('consolidate'),
     swig = require('swig'),
     sass = require('node-sass'),
-    auth = require('./routes/auth');
+    user = require('./routes/user'),
+    config = require('./config'),
+    routes = require('./routes/routes'),
+    auth = require('./routes/auth'),
+    db = require('./db');
 
 var app = express();
 
@@ -65,6 +66,8 @@ if (app.get('dev')) {
 }
 
 routes.init(app);
+
+db.init(app);
 
 if (!testing) {
     // Srart the server if not testing.

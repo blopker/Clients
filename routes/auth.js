@@ -9,7 +9,7 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(id, done) {
-    var user = User.find(id, function(err, user) {
+    var user = User.get(id, function(err, user) {
         if (err) { return done(err); }
         done(null, user);
     });
@@ -17,7 +17,7 @@ passport.deserializeUser(function(id, done) {
 
 passport.use(new LocalStrategy(
   function(username, password, done) {
-    User.find(username, function (err, user) {
+    User.get(username, function (err, user) {
       if (err) { return done(err); }
       if (!user) {
         return done(null, false, { message: 'Incorrect username.' });
@@ -37,7 +37,7 @@ function login_get(req, res) {
 // Middleware to restrict page access.
 function restricted(req, res, next) {
     if (log_in_as !== false) {
-        User.find(log_in_as, function(err, user) {
+        User.get(log_in_as, function(err, user) {
             if (err) {return;}
             req.logIn(user, function(err) {});
         });

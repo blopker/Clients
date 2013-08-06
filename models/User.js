@@ -1,3 +1,6 @@
+var db = require('../db'),
+    config = require('../config');
+
 function User(username, pass, root, admin) {
     this.id = username;
     this.pass = pass;
@@ -10,19 +13,15 @@ User.prototype.isAdmin = function() {
     return this.admin;
 };
 
-var db = [
-    new User('bo', 'pass', '/home/ninj0x/Downloads', true),
-    new User('tommy', 'pass', '/tmp')
-];
-
-function find(username, fn) {
-    var found = null;
-    db.forEach(function(user) {
-        if (user.id === username) {
-            found = user;
-        }
-    });
-    return fn(null, found);
+function create (username, pass, root, admin) {
+    var user = new User(username, pass, root, admin);
+    db.set('users', username, user);
+    return user;
 }
 
-exports.find = find;
+function get (username, cb) {
+    cb(null, db.get('users', username));
+}
+
+exports.get = get;
+exports.create = create;

@@ -103,7 +103,7 @@ describe('Files', function() {
     describe('Browse', function() {
         it('should return false if ../ in path', function() {
             var san_path = sanitize('/bin/../');
-            assert.equal(san_path, false);
+            assert.equal(san_path, null);
         });
 
         it('should return path if ../ not in path', function() {

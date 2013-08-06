@@ -2,7 +2,7 @@ var local_fs = require('../models/LocalFileSystem');
 
 function sanitize_path (path) {
     if(path.search(/\.\.\//) !== -1){
-        return false;
+        return null;
     }
     return path;
 }
@@ -23,21 +23,39 @@ function make_breadcrumb (path) {
     return crumb;
 }
 
-function browse (req, res) {
-    var path = sanitize_path(req.params[0]);
-    if (path === false) {
-        // Redirect on bad behaviour.
-        return res.redirect('/files/');
+function validate (req, res) {
+    var path = req.params[0] || "";
+    return sanitize_path(path);
+}
+
+function browse_folder (req, res) {
+    var path = validate(req, res);
+    if(path === null){
+       return res.redirect('/files/');
     }
 
     res.locals.crumb = make_breadcrumb(path);
-    console.log(res.locals.crumb);
 
     // Add user's root to path for the file system.
     var fs_path = req.user.root + '/' + path;
 
-    local_fs.get_path(res, fs_path);
+    local_fs.get_folder(res, fs_path, function(err) {
+        return res.redirect(404);
+    });
 }
 
-exports.browse = browse;
+function get_file (req, res) {
+    var path = validate(req, res);
+    if(path === null){
+        return res.redirect('/files/');;
+    }
+    var fs_path = req.user.root + '/' + path;
+    local_fs.get_file(res, fs_path, function(err) {
+        // Maybe it's a folder.
+        res.redirect('/files/' + path + '/');
+    });
+}
+
+exports.get_file = get_file;
+exports.browse_folder = browse_folder;
 exports.sanitize_path = sanitize_path;
