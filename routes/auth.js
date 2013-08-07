@@ -36,6 +36,7 @@ function login_get(req, res) {
 
 // Middleware to restrict page access.
 function restricted(req, res, next) {
+    // Auto login for debugging.
     if (log_in_as !== false) {
         User.get(log_in_as, function(err, user) {
             if (err) {return;}
@@ -44,7 +45,8 @@ function restricted(req, res, next) {
     }
 
     if (req.isAuthenticated()) { return next(); }
-    // Save this page for later.
+
+    // Save this path for later.
     req.session.lastURL = req.url;
     res.redirect('/login');
 }
@@ -57,31 +59,39 @@ function restrictedAdmin (req, res, next) {
     });
 }
 
+// Middleware for authentication
+function authenticate (req, res, next) {
+    passport.authenticate('local', {failureRedirect: req.path })(req, res, next);
+}
+
+// Call after authentication
+function authenticated (req, res) {
+    if (typeof req.session.lastURL !== 'undefined') {
+        // Redirect back to the page they came from
+        res.redirect(req.session.lastURL);
+    } else {
+        res.redirect('/');
+    }
+}
+
+function logout (req, res) {
+    req.logout();
+    req.session.destroy(function(){
+        res.redirect('/');
+    });
+}
+
 exports.init = function(app) {
     log_in_as = app.get('log_in_as');
 
     app.use(passport.initialize());
     app.use(passport.session());
 
-    app.get('/login', login_get);
-    app.post('/login',
-        passport.authenticate('local', {failureRedirect: '/login' }),
-        function(req, res) {
-            if (typeof req.session.lastURL !== 'undefined') {
-                // Redirect back to the page they came from
-                res.redirect(req.session.lastURL);
-            } else {
-                res.redirect('/');
-            }
-    });
-    app.get('/logout', function(req, res) {
-        req.logout();
-        req.session.destroy(function(){
-            res.redirect('/');
-        });
-    });
     return app;
 };
 
 exports.restricted = restricted;
 exports.restrictedAdmin = restrictedAdmin;
+exports.authenticate = authenticate;
+exports.authenticated = authenticated;
+exports.logout = logout;

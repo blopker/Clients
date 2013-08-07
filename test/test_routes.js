@@ -1,6 +1,6 @@
 var app = require('../app'),
     request = require('supertest'),
-    sanitize = require('../routes/file_system').sanitize_path,
+    validate = require('../routes/file_system').validate,
     assert = require('assert');
 
 describe('Index', function() {
@@ -101,18 +101,22 @@ describe('Auth', function() {
 
 describe('Files', function() {
     describe('Browse', function() {
-        it('should return false if ../ in path', function() {
-            var san_path = sanitize('/bin/../');
+        var req = {params:{}};
+        it('should return null if ../ in path', function() {
+            req.params.file = '/bin/../';
+            var san_path = validate(req);
             assert.equal(san_path, null);
         });
 
         it('should return path if ../ not in path', function() {
-            var san_path = sanitize('/bin/');
+            req.params.file = '/bin/';
+            var san_path = validate(req);
             assert.equal(san_path, '/bin/');
         });
 
         it('should return path if ../ not in path', function() {
-            var san_path = sanitize('/bi..n/');
+            req.params.file = '/bi..n/';
+            var san_path = validate(req);
             assert.equal(san_path, '/bi..n/');
         });
     });

@@ -22,7 +22,7 @@ function populate_folder(folder, paths, cb) {
     });
 }
 
-function create_folder(path, cb){
+function get_folder(path, cb){
     try{
         path = fs.realpathSync(path) + '/';
     } catch(err) {
@@ -41,16 +41,6 @@ function create_folder(path, cb){
     });
 }
 
-function get_folder (res, path, cb) {
-    fs.stat(path, function(err, stat) {
-        if(err){return cb(err);}
-        create_folder(path, function(err, folder) {
-            if(err){return cb(err);}
-            return res.render('files', {folder: folder});
-        });
-    });
-}
-
 function get_file (res, path, cb) {
     fs.stat(path, function(err, stat) {
         if(err){return cb(err);}
@@ -64,6 +54,3 @@ function get_file (res, path, cb) {
 
 exports.get_folder = get_folder;
 exports.get_file = get_file;
-
-// For testing
-exports.create_folder = create_folder;
