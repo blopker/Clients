@@ -1,21 +1,19 @@
-var config = require('./config'),
-    User = require('./models/User');
+var Sequelize = require('sequelize-sqlite').sequelize,
+    sqlite3 = require('sequelize-sqlite').sqlite;
 
-var db = {users:{}};
+var sequelize = new Sequelize('database', 'username', null,{
+    // sqlite! now!
+    dialect: 'sqlite',
 
-function init (app) {
-    User.create('bo', 'pass', '/home/ninj0x/Downloads', true);
-    User.create('tommy', 'pass', '/tmp');
-}
+    // the storage engine for sqlite
+    // - default ':memory:'
+    storage: 'dev.sqlite'
+});
 
-function get (tableName, id) {
-    return db[tableName][id];
-}
+var db = {
+    types: Sequelize,
+    model: sequelize,
+    User:  sequelize.import(__dirname + '/models/User')
+};
 
-function set (tableName, id, obj) {
-    db[tableName][id] = obj;
-}
-
-exports.init = init;
-exports.get = get;
-exports.set = set;
+module.exports = db;

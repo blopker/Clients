@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<table>
+    <thead>
+        <tr>
+            <th width="200">Username</th>
+            <th>Location</th>
+            <th width="150">Created</th>
+            <th width="150">Last Seen</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for user in users %}
+    <tr>
+        <td>{{ user.name }}</td>
+        <td>{{ user.root }}</td>
+        <td>{{ user.createdAt | date('F jS, Y') }}</td>
+        <td>{{ user.updatedAt | date('F jS, Y')}}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

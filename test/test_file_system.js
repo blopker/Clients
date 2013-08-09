@@ -14,7 +14,7 @@ describe('File System', function() {
     });
 
     it('should get a err for bad file paths', function(done) {
-        fs.get_folder('/not_a_real_file', function(err, folder) {
+        fs.get_folder('/not_a_real_file', function(err) {
             assert(err !== null);
             done();
         });

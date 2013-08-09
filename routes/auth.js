@@ -1,47 +1,49 @@
 var passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
-    User = require('../models/User');
+    User = require('../db').User;
 
 var log_in_as = false;
 
 passport.serializeUser(function(user, done) {
-    done(null, user.id);
+    done(null, user.name);
 });
 
 passport.deserializeUser(function(id, done) {
-    var user = User.get(id, function(err, user) {
+    User.get(id, function(err, user) {
         if (err) { return done(err); }
         done(null, user);
     });
 });
 
 passport.use(new LocalStrategy(
-  function(username, password, done) {
-    User.get(username, function (err, user) {
-      if (err) { return done(err); }
-      if (!user) {
-        return done(null, false, { message: 'Incorrect username.' });
-      }
-      if (user.pass !== password) {
-        return done(null, false, { message: 'Incorrect password.' });
-      }
-      return done(null, user);
-    });
-  }
-));
+    function(username, password, done) {
+        User.get(username, function (err, user) {
+            if (err) {return done(err); }
 
-function login_get(req, res) {
-    res.render('login');
-}
+            if (!user) {
+                return done(null, false, { message: 'Incorrect username.' });
+            }
+            if (user.password !== password) {
+                return done(null, false, { message: 'Incorrect password.' });
+            }
+            return done(null, user);
+        });
+    }
+));
 
 // Middleware to restrict page access.
 function restricted(req, res, next) {
     // Auto login for debugging.
-    if (log_in_as !== false) {
+    if (log_in_as !== false && !req.isAuthenticated()) {
         User.get(log_in_as, function(err, user) {
-            if (err) {return;}
-            req.logIn(user, function(err) {});
+            if (err) {throw err;}
+            req.logIn(user, function(err) {
+                if (err) {throw err;}
+                res.locals.user = req.user;
+                return next();
+            });
         });
+        return;
     }
 
     if (req.isAuthenticated()) { return next(); }
@@ -61,7 +63,8 @@ function restrictedAdmin (req, res, next) {
 
 // Middleware for authentication
 function authenticate (req, res, next) {
-    passport.authenticate('local', {failureRedirect: req.path })(req, res, next);
+    passport.authenticate('local',
+        {failureRedirect: req.path })(req, res, next);
 }
 
 // Call after authentication
@@ -86,6 +89,14 @@ exports.init = function(app) {
 
     app.use(passport.initialize());
     app.use(passport.session());
+
+    // Add user to locals for templates
+    app.use(function(req, res, next) {
+        if(req.user){
+            res.locals.user = req.user;
+        }
+        next();
+    });
 
     return app;
 };

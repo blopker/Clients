@@ -1,36 +1,56 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<a href="/files/">Home</a>
-{% for c in crumb %}
-    / <a href="{{c.link}}">{{c.name}}</a>
-{% endfor %}
-<ul class="row">
+<div id="list" class="files list">
+    <div class="row">
+    <a href="/files/">Home</a>
+    {% for c in crumb %}
+        {% if c.link === '' %}
+            / <span>{{c.name}}</span>
+        {% else %}
+            / <a href="{{c.link}}">{{c.name}}</a>
+        {% endif %}
+    {% endfor %}
+    </div>
+    {% if crumb.length %}
+    <a href="../" class="row file">
+        <div class="large-1 columns">
+            <i class="foundicon-left-arrow"></i>
+        </div>
+        <div class="large-11 columns">
+            <div class="name">Back</div>
+        </div>
+    </a>
+    {% endif %}
     {% for file in folder.files %}
         {% if file.stats.isDirectory() %}
-            <li class="row file">
+            <a href="{{file.name}}" class="row file">
                 <div class="large-1 columns">
-                    {{ file.type }}
+                    <i class="foundicon-folder"></i>
                 </div>
                 <div class="large-11 columns">
-                    <a href="{{file.name}}">{{file.name}}</a>
+                    <div class="name">{{file.name}}</div>
                 </div>
-            </li>
+            </a>
         {% endif %}
     {% endfor %}
     {% for file in folder.files %}
         {% if file.stats.isFile() %}
-            <li class="row file">
+            <a href="{{file.name}}" class="row file">
                 <div class="large-1 columns">
-                    {{ file.type }}
+                    <i class="foundicon-{{file.icon}}"></i>
+                    <!-- {{ file.type }} -->
                 </div>
                 <div class="large-11 columns">
-                    <a href="{{file.name}}">{{file.name}}</a>
-                    {{file.stats.size | toMB}} MB
+                    <div class="name">{{file.name}}</div>
+                    <div class="size">{{file.stats.size | toMB}} MB</div>
                 </div>
-            </li>
+            </a>
         {% endif %}
     {% endfor %}
-</ul>
-Total Size: {{ folder.size | toMB }} MB
+
+    <div class="folder-size">
+    Total Size: {{ folder.size | toMB }} MB
+    </div>
+</div>
 {% endblock %}

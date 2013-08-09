@@ -17,7 +17,7 @@ function make_breadcrumb (path) {
 }
 
 function validate (req, res) {
-    var path = req.params.file || "";
+    var path = req.params.file || '';
     if(path.search(/\.\.\//) !== -1){
         return null;
     }
@@ -27,7 +27,7 @@ function validate (req, res) {
 function browse_folder (req, res) {
     var path = validate(req, res);
     if(path === null){
-       return res.redirect('/files/');
+        return res.redirect('/files/');
     }
 
     res.locals.crumb = make_breadcrumb(path);
@@ -50,7 +50,7 @@ function get_file (req, res) {
     // Add user's root to path for the file system.
     var fs_path = req.user.root + '/' + path;
 
-    local_fs.get_file(res, fs_path, function(err) {
+    local_fs.get_file(res, fs_path, function() {
         // Maybe it's a folder.
         res.redirect('/files/' + path + '/');
     });

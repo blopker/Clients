@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon -e js,html --debug app.js",
+    "dev": "nodemon -e js,html,scss --debug app.js",
     "test": "mocha -R spec -w"
   },
   "dependencies": {

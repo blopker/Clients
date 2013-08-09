@@ -1,7 +1,6 @@
-var user = require('./user'),
+var admin = require('./admin'),
     auth = require('./auth'),
     fs = require('./file_system');
-
 
 function init (app) {
     app.get('/', function(req, res) {
@@ -17,7 +16,10 @@ function init (app) {
     });
 
     // Admin routes
-    app.get('/admin', auth.restrictedAdmin, user.list);
+    app.get('/admin', auth.restrictedAdmin, admin.list);
+    app.post('/admin', auth.restrictedAdmin, admin.update);
+    app.put('/admin', auth.restrictedAdmin, admin.add);
+    app.delete('/admin', auth.restrictedAdmin, admin.delete);
 
     // Login routes
     app.get('/login', function (req, res) {

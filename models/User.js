@@ -1,27 +1,77 @@
-var db = require('../db'),
-    config = require('../config');
+module.exports = function(db, types) {
+    var name = {
+        type: types.STRING,
+        primaryKey: true,
+        allowNull: false,
+        validate:{
+            isAlphanumeric: {
+                msg: 'Username must be alphanumeric.'
+            },
+            len: {
+                args: [[2, 100]],
+                msg: 'Username must be between 2 and 100 characters.'
+            }
+        },
+        set: function(name) {
+            return this.setDataValue('name', name.toString().toLowerCase());
+        }
+    };
 
-function User(username, pass, root, admin) {
-    this.id = username;
-    this.pass = pass;
-    this.root = root || '/';
-    this.admin = admin || false;
-    return this;
-}
+    var password = {
+        type: types.STRING,
+        allowNull: false,
+        validate: {
+            len: {
+                args: [[5, 100]],
+                msg: 'Password must be between 5 and 100 characters.'
+            }
+        }
+    };
 
-User.prototype.isAdmin = function() {
-    return this.admin;
+    var root = {
+        type: types.STRING,
+        allowNull: false,
+        validate: {
+            len: {
+                args: [[1, 100]],
+                msg: 'Root path cannot be empty.'
+            }
+        }
+    };
+
+    var admin = {
+        type: types.BOOLEAN,
+        defaultValue: false,
+        allowNull: false
+    };
+
+    var instanceMethods = {
+        isAdmin: function() {
+            return this.admin;
+        },
+        is: function(username) {
+            return this.id === username.toLowerCase();
+        }
+    };
+
+    var classMethods = {
+        get: function(username, cb) {
+            this.find({where: {name: username}})
+            .success(function(user) {
+                cb(null, user);
+            }).error(function(err) {
+                cb(err, null);
+            });
+        }
+    };
+
+    return db.define('User', {
+        name: name,
+        password: password,
+        root: root,
+        admin: admin
+    }, {
+        instanceMethods: instanceMethods,
+        classMethods: classMethods
+    });
 };
-
-function create (username, pass, root, admin) {
-    var user = new User(username, pass, root, admin);
-    db.set('users', username, user);
-    return user;
-}
-
-function get (username, cb) {
-    cb(null, db.get('users', username));
-}
-
-exports.get = get;
-exports.create = create;

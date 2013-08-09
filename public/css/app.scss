@@ -1,6 +1,10 @@
 // Make sure the charset is set appropriately
 @charset "UTF-8";
 
+// Icons
+@import "foundation_icons_general/sass/general_foundicons";
+
+
 //
 // Foundation config
 //
@@ -40,14 +44,20 @@
 // @import "foundation/components/sub-nav";
 // @import "foundation/components/switch";
 // @import "foundation/components/magellan";
-// @import "foundation/components/tables";
+@import "foundation/components/tables";
 // @import "foundation/components/thumbs";
 // @import "foundation/components/tooltips";
 // @import "foundation/components/dropdown";
 
+
 //
 // Custom styles
 //
+
+// Stop scroll bar from making content jump around.
+html {
+    overflow-y: scroll;
+}
 
 body{
     max-width: 1000px;
@@ -61,4 +71,37 @@ body{
     .button{
         margin-bottom: -1.25em;
     }
+}
+
+.logged div{
+    text-align: right;
+}
+
+.list{
+    margin-bottom: 20px;
+    .folder-size{
+        padding-top: 20px;
+    }
+}
+
+.file{
+    display: block;
+    height: 50px;
+    border-top: solid 1px #eee;
+    padding: 11px;
+    i{
+        font-size: 35px;
+        color: #555;
+    }
+    .size{
+        color: $body-font-color;
+    }
+}
+
+.file:last-of-type{
+    border-bottom: solid 1px #eee;
+}
+
+.file:hover{
+    background-color: #eee;
 }
