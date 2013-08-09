@@ -22,6 +22,7 @@ function user_factory (db, count) {
 
     var func = [];
     func.push(user_temp(bo));
+    func.push(user_temp('tommy'));
     for (var i = 0; i < count; i++) {
         var user = getUser('tommy' + i);
         func.push(user_temp(user));
