@@ -4,11 +4,10 @@ require('../app')(function(app) {
     assert = require('assert');
 
     describe('Index', function() {
-        it('should return HTML', function(done) {
+        it('should redirect', function(done) {
             request(app)
                 .get('/')
-                .expect('Content-Type', /html/)
-                .expect(200)
+                .expect(302)
                 .end(function(err){
                     if (err) {throw err;}
                     done();
