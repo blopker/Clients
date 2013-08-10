@@ -9,7 +9,7 @@ function getUser (name) {
 
 var bo = { name: 'bo',
             password: 'pass',
-            root: '/home/ninj0x/Downloads',
+            root: './',
             admin: true };
 
 function user_factory (db, count) {

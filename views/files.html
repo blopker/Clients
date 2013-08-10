@@ -24,7 +24,7 @@
     {% endif %}
     {% for file in folder.files %}
         {% if file.stats.isDirectory() %}
-            <a href="{{file.name}}" class="row file">
+            <a href="{{file.name}}" class="row file folder">
                 <div class="large-1 columns">
                     <i class="foundicon-folder"></i>
                 </div>

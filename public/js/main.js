@@ -1,3 +1,3 @@
 
-$(document).pjax('#list a', '#list', {fragment:'#list'});
+$(document).pjax('#list a.folder', '#list', {fragment:'#list'});
 

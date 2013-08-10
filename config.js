@@ -1,5 +1,5 @@
 var config = {
-    // log_in_as: 'bo'
+    log_in_as: 'bo'
 };
 
 

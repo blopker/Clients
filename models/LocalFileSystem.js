@@ -14,8 +14,11 @@ function endsWith(str, suffix) {
 function populate_folder(folder, paths, cb) {
     async.map(paths, fs.stat, function(err, results) {
         if (err) {
-            return cb(err, null);}
+            return cb(err, null);
+        }
         for (var i = 0; i < paths.length; i++) {
+            // Skip dotfiles.
+            if (paths[i].search('/\\.') !== -1) {continue;}
             folder.add_file(new File(paths[i], results[i]));
         }
         return cb(null, folder);
@@ -42,12 +45,20 @@ function get_folder(path, cb){
 }
 
 function get_file (res, path, cb) {
+    try{
+        path = fs.realpathSync(path);
+    } catch(err) {
+        return cb(err, null);
+    }
+
     fs.stat(path, function(err, stat) {
         if(err){return cb(err);}
         if (stat.isFile()) {
-            return res.download(path);
+            return res.download(path, function(err) {
+                return cb(err, null);
+            });
         } else {
-            return cb("Not a file.");
+            return cb('Not a file.');
         }
     });
 }
