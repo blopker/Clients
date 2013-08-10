@@ -16,6 +16,6 @@
     "supertest": "0.7.1",
     "passport-local": "0.1.6",
     "passport": "0.1.17",
-    "async": "0.2.9"gc
+    "async": "0.2.9"
   }
 }
