@@ -79,6 +79,7 @@ function authenticated (req, res) {
 
 function logout (req, res) {
     req.logout();
+    delete req.session.lastURL;
     req.session.destroy(function(){
         res.redirect('/');
     });
