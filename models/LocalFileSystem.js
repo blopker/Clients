@@ -54,8 +54,8 @@ function get_file (res, path, cb) {
     fs.stat(path, function(err, stat) {
         if(err){return cb(err);}
         if (stat.isFile()) {
-            return res.download(path, function(err) {
-                return cb(err, null);
+            res.download(path, function(err) {
+                if (err) {return cb();}
             });
         } else {
             return cb('Not a file.');
