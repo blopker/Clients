@@ -3,12 +3,12 @@
 {% block content %}
 <div id="list" class="files list">
     <div class="row">
-    <a href="/files/">Home</a>
+    <a class="folder" href="/files/">Home</a>
     {% for c in crumb %}
         {% if c.link === '' %}
             / <span>{{c.name}}</span>
         {% else %}
-            / <a href="{{c.link}}">{{c.name}}</a>
+            / <a class="folder" href="{{c.link}}">{{c.name}}</a>
         {% endif %}
     {% endfor %}
     </div>
