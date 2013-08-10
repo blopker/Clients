@@ -4,7 +4,7 @@ var admin = require('./admin'),
 
 function init (app) {
     app.get('/', function(req, res) {
-        res.send('HELLO');
+        res.redirect('/files/');
     });
 
     // Browse routes
