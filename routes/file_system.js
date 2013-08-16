@@ -37,7 +37,7 @@ function browse_folder (req, res) {
 
     local_fs.get_folder(fs_path, function(err, folder) {
         if (err) {
-            res.redirect(404);
+            res.redirect('/files/');
         } else {
             res.render('files', {folder: folder});
         }
