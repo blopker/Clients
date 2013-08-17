@@ -64,9 +64,8 @@ module.exports = function(db, types) {
             return this.id === username.toLowerCase();
         },
         checkPassword: function(password) {
-            var hpass = hash(hash(password));
-            var pass = this.password;
-            return pass === hpass;
+            // Double hash b/c of Sequelize bug
+            return this.password === hash(hash(password));
         }
     };
 
