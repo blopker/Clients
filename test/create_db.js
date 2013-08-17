@@ -15,16 +15,16 @@ var bo = { name: 'bo',
 function user_factory (db, count) {
     function user_temp (user) {
         return function(call) {
-            db.User.findOrCreate(user)
+            db.User.create(user)
             .complete(call);
         };
     }
 
     var func = [];
     func.push(user_temp(bo));
-    func.push(user_temp(getUser('tommy')));
+    func.push(user_temp(getUser('toMMy')));
     for (var i = 0; i < count; i++) {
-        var user = getUser('tommy' + i);
+        var user = getUser('toMMy' + i);
         func.push(user_temp(user));
     }
     return func;
@@ -33,13 +33,16 @@ function user_factory (db, count) {
 function add_data (db, cb) {
     async.series(user_factory(db, 10),
     function(err) {
-        if (err) {throw err;}
+        if (err) {
+            console.dir(err);
+            throw err;
+        }
         cb();
     });
 }
 
 function init (cb) {
-    var Sequelize = require('sequelize-sqlite').sequelize;
+    var Sequelize = require('sequelize');
 
     var sequelize = new Sequelize('database', 'username', null,{
         // sqlite! now!
@@ -48,6 +51,8 @@ function init (cb) {
         // the storage engine for sqlite
         // - default ':memory:'
         storage: 'dev.sqlite'
+
+        // logging: false
     });
 
     var db = {

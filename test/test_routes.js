@@ -84,7 +84,7 @@ require('../app')(function(app) {
             var bo = request.agent(app);
             it('should let admins login', function(done) {
                 bo.post('/login')
-                    .send({username:'bo', password: 'pass'})
+                    .send({username:'Bo', password: 'pass'})
                     .expect(302)
                     .expect('Location', '/')
                     .end(function(err) {

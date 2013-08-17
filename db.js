@@ -1,5 +1,5 @@
-var Sequelize = require('sequelize-sqlite').sequelize,
-    sqlite3 = require('sequelize-sqlite').sqlite;
+var Sequelize = require('sequelize');
+    // sqlite3 = require('sequelize-sqlite').sqlite;
 
 var sequelize = new Sequelize('database', 'username', null,{
     // sqlite! now!

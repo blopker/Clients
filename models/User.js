@@ -1,3 +1,11 @@
+var crypto = require('crypto');
+
+var hash = function(plaintext) {
+            var hash = crypto.createHash('sha256');
+            hash.update(plaintext, 'utf8');
+            return hash.digest('base64');
+        };
+
 module.exports = function(db, types) {
     var name = {
         type: types.STRING,
@@ -8,12 +16,12 @@ module.exports = function(db, types) {
                 msg: 'Username must be alphanumeric.'
             },
             len: {
-                args: [[2, 100]],
+                args: [2, 100],
                 msg: 'Username must be between 2 and 100 characters.'
             }
         },
         set: function(name) {
-            return this.setDataValue('name', name.toString().toLowerCase());
+            this.setDataValue('name', name.toString().toLowerCase());
         }
     };
 
@@ -22,9 +30,12 @@ module.exports = function(db, types) {
         allowNull: false,
         validate: {
             len: {
-                args: [[5, 100]],
+                args: [5, 100],
                 msg: 'Password must be between 5 and 100 characters.'
             }
+        },
+        set: function(v) {
+            this.setDataValue('password', hash(v));
         }
     };
 
@@ -33,7 +44,7 @@ module.exports = function(db, types) {
         allowNull: false,
         validate: {
             len: {
-                args: [[1, 100]],
+                args: [1, 100],
                 msg: 'Root path cannot be empty.'
             }
         }
@@ -51,6 +62,11 @@ module.exports = function(db, types) {
         },
         is: function(username) {
             return this.id === username.toLowerCase();
+        },
+        checkPassword: function(password) {
+            var hpass = hash(hash(password));
+            var pass = this.password;
+            return pass === hpass;
         }
     };
 

@@ -17,13 +17,14 @@ passport.deserializeUser(function(id, done) {
 
 passport.use(new LocalStrategy(
     function(username, password, done) {
+        username = username.toLowerCase();
         User.get(username, function (err, user) {
             if (err) {return done(err); }
 
             if (!user) {
                 return done(null, false, { message: 'Incorrect username.' });
             }
-            if (user.password !== password) {
+            if (!user.checkPassword(password)) {
                 return done(null, false, { message: 'Incorrect password.' });
             }
             return done(null, user);
