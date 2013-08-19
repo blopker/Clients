@@ -65,7 +65,9 @@ function restrictedAdmin (req, res, next) {
 // Middleware for authentication
 function authenticate (req, res, next) {
     passport.authenticate('local',
-        {failureRedirect: req.path })(req, res, next);
+        {failureRedirect: req.path,
+         failureFlash: 'Invalid username or password.'
+        })(req, res, next);
 }
 
 // Call after authentication

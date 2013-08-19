@@ -14,9 +14,12 @@
     "node-sass": "0.6.3",
     "sequelize": "1.7.0-alpha3",
     "sqlite3": "~2.1.5",
-    "supertest": "0.7.1",
     "passport-local": "0.1.6",
     "passport": "0.1.17",
-    "async": "0.2.9"
+    "async": "0.2.9",
+    "connect-flash": "~0.1.1"
+  },
+  "devDependencies":{
+    "supertest": "0.7.1"
   }
 }

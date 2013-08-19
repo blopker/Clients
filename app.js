@@ -13,6 +13,7 @@ function init (app_done) {
         swig = require('swig'),
         sass = require('node-sass'),
         async = require('async'),
+        flash = require('connect-flash'),
         config = require('./config'),
         routes = require('./routes/routes'),
         auth = require('./routes/auth');
@@ -59,6 +60,7 @@ function init (app_done) {
     app.use(express.session({ secret: config.secret || 'keyboard cat',
                               cookie: {httpOnly: true}
                             }));
+    app.use(flash());
     auth.init(app);
     app.use(express.methodOverride());
     app.use(app.router);

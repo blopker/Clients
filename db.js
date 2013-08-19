@@ -1,12 +1,7 @@
 var Sequelize = require('sequelize');
-    // sqlite3 = require('sequelize-sqlite').sqlite;
 
 var sequelize = new Sequelize('database', 'username', null,{
-    // sqlite! now!
     dialect: 'sqlite',
-
-    // the storage engine for sqlite
-    // - default ':memory:'
     storage: 'dev.sqlite'
 });
 

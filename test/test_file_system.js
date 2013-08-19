@@ -1,5 +1,6 @@
 var assert = require('assert'),
-    fs = require('../models/LocalFileSystem');
+    fs = require('../models/LocalFileSystem'),
+    validate = require('../routes/file_system').validate;
 
 describe('File System', function() {
     it('should get a folder object', function(done) {
@@ -21,3 +22,26 @@ describe('File System', function() {
     });
 });
 
+
+describe('File Validation', function() {
+    describe('Browse', function() {
+        var req = {params:{}};
+        it('should return null if ../ in path', function() {
+            req.params.file = '/bin/../';
+            var san_path = validate(req);
+            assert.equal(san_path, null);
+        });
+
+        it('should return path if ../ not in path', function() {
+            req.params.file = '/bin/';
+            var san_path = validate(req);
+            assert.equal(san_path, '/bin/');
+        });
+
+        it('should return path if ../ not in path', function() {
+            req.params.file = '/bi..n/';
+            var san_path = validate(req);
+            assert.equal(san_path, '/bi..n/');
+        });
+    });
+});

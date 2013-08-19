@@ -11,7 +11,10 @@ var defaults = {
     dev: true,
     secret: 'boisawesome',
     log_in_as: false,
-    admin: {name: 'admin', pass: 'secret'}
+    admin: { name: 'bo',
+            password: 'pass',
+            root: './test/test_files',
+            admin: true }
 };
 
 function extend(target) {

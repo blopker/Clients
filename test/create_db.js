@@ -1,58 +1,36 @@
-var async = require('async');
-
-function getUser (name) {
-    return { name: name,
-            password: 'pass',
-            root: '/tmp',
-            admin: false };
-}
-
 var bo = { name: 'bo',
             password: 'pass',
             root: './test/test_files',
             admin: true };
 
-function user_factory (db, count) {
-    function user_temp (user) {
-        return function(call) {
-            db.User.create(user)
-            .complete(call);
-        };
+function make_tommy (jersey_number) {
+    var name = 'tommy';
+    if (jersey_number !== 0) {
+        name += jersey_number;
     }
-
-    var func = [];
-    func.push(user_temp(bo));
-    func.push(user_temp(getUser('toMMy')));
-    for (var i = 0; i < count; i++) {
-        var user = getUser('toMMy' + i);
-        func.push(user_temp(user));
-    }
-    return func;
+    return { name: name,
+        password: 'pass',
+        root: '/tmp',
+        admin: false };
 }
 
-function add_data (db, cb) {
-    async.series(user_factory(db, 10),
-    function(err) {
-        if (err) {
-            console.dir(err);
-            throw err;
-        }
-        cb();
-    });
+function make_users (count) {
+    var users = [];
+    users.push(bo);
+    for (var i = 0; i < count; i++) {
+        users.push(make_tommy(i));
+    }
+    return users;
 }
 
 function init (cb) {
     var Sequelize = require('sequelize');
 
     var sequelize = new Sequelize('database', 'username', null,{
-        // sqlite! now!
         dialect: 'sqlite',
+        storage: 'dev.sqlite',
 
-        // the storage engine for sqlite
-        // - default ':memory:'
-        storage: 'dev.sqlite'
-
-        // logging: false
+        logging: false
     });
 
     var db = {
@@ -63,9 +41,10 @@ function init (cb) {
 
     sequelize.drop().success(function() {
         sequelize.sync().success(function() {
-            add_data(db, function() {
-                cb(db);
-            });
+            db.User.bulkCreate(make_users(10))
+                .success(function() {
+                    cb(db);
+                });
         });
     });
 
