@@ -56,6 +56,13 @@ module.exports = function(db, types) {
         allowNull: false
     };
 
+    var last_seen = {
+        type: types.DATE,
+        defaultValue: types.NOW,
+        allowNull: false
+    };
+
+
     var instanceMethods = {
         isAdmin: function() {
             return this.admin;
@@ -73,7 +80,16 @@ module.exports = function(db, types) {
         get: function(username, cb) {
             this.find({where: {name: username}})
             .success(function(user) {
-                cb(null, user);
+                // console.log(user)
+                if (user === null) {
+                    return cb(null, null);
+                }
+                user.last_seen = new Date();
+                user.save().success(function() {
+                    cb(null, user);
+                }).error(function(err) {
+                    cb(err, null);
+                });
             }).error(function(err) {
                 cb(err, null);
             });
@@ -84,7 +100,8 @@ module.exports = function(db, types) {
         name: name,
         password: password,
         root: root,
-        admin: admin
+        admin: admin,
+        last_seen: last_seen
     }, {
         instanceMethods: instanceMethods,
         classMethods: classMethods

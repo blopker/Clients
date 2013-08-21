@@ -4,7 +4,7 @@ It's all about the client.
 
 About
 =====
-Clients is a webapp to serve files to your clients. Clients allows you to make seperate accounts, each with its own root folder, for each client. You clients can then log in and see your work. No FTP, no SFTP, just easy HTTP.
+Clients is a webapp to serve files to your clients. Clients allows you to make seperate accounts, each with its own root folder, for each client. Your clients can then log in and see your work. No FTP, no SFTP, just easy HTTP.
 
 Install
 =======

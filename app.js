@@ -50,6 +50,7 @@ function init (app_done) {
     }));
 
     app.use(express.favicon());
+    app.use(express.static(path.join(__dirname, 'public')));
 
     // Keep logger quite for tests.
     if (!testing) {
@@ -64,7 +65,6 @@ function init (app_done) {
     auth.init(app);
     app.use(express.methodOverride());
     app.use(app.router);
-    app.use(express.static(path.join(__dirname, 'public')));
 
     // Development only
     if (app.get('dev')) {
