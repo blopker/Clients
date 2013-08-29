@@ -14,6 +14,8 @@ Clients requires Linux and NodeJS >=0.10.0.
 
 ### Instructions
 
+** Still in development, instructions may not work **
+
 1. Download the latest release
 2. `cd` into the Clients folder
 3. Run `npm upgrade` to get all the app dependancies.
